@@ -9,13 +9,8 @@
 
 **Weather App Brutalist** adalah aplikasi cuaca modern yang menampilkan data real-time untuk Jakarta dengan desain brutalist yang bold dan functional. Aplikasi ini dibangun dengan prinsip **zero dependencies**, **single-file architecture**, dan **performance-first approach**.
 
-### 🌐 **Live Demo**
-- **🏗️ Architecture Visualization:** `http://localhost:9000/architecture-visualization.html`
-- **🌤️ Weather Application:** `http://localhost:9000/weather-app-complete.html`  
-- **📋 TypeScript Version:** `http://localhost:8080`
-- **📱 GitHub Repository:** [Create your own GitHub repo and update this link](https://github.com/yourusername/weather-app-brutalist)
+### 🌐 **(https://tugasku-kedua-ya.vercel.app/)**
 
----
 
 ## ✨ Features
 
