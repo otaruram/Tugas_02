@@ -7,7 +7,9 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "serve": "npx http-server . -p 8080 -c-1 -o",
-    "serve:3000": "npx http-server . -p 3000 -o"
+    "serve:3000": "npx http-server . -p 3000 -o",
+    "vercel-build": "npm run build && copy *.html dist\\ && copy *.css dist\\ && copy vercel.json dist\\",
+    "preview": "npx http-server dist -p 3000 -o"
   },
   "devDependencies": {
     "typescript": "^5.2.2",
