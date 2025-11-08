@@ -1,0 +1,20 @@
+{
+  "name": "weather-brutalist-app",
+  "version": "1.0.0",
+  "description": "Brutalist weather app with Open-Meteo API",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "serve": "npx http-server . -p 8080 -c-1 -o",
+    "serve:3000": "npx http-server . -p 3000 -o"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "@types/node": "^20.8.0",
+    "http-server": "^14.1.1"
+  },
+  "keywords": ["weather", "typescript", "brutalism", "api"],
+  "author": "",
+  "license": "MIT"
+}

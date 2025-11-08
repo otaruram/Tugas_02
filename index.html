@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CUACA JAKARTA // BRUTAL WEATHER</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1 class="title">CUACA JAKARTA</h1>
+        <p class="subtitle">WEATHER DATA // BRUTAL INTERFACE</p>
+    </header>
+
+    <main class="main">
+        <section class="controls">
+            <button id="refresh-btn" class="btn-brutal">REFRESH DATA</button>
+            <div id="status" class="status">LOADING...</div>
+        </section>
+
+        <section class="data-section">
+            <h2 class="section-title">TEMPERATURE DATA</h2>
+            <div class="table-container">
+                <table id="weather-table" class="weather-table">
+                    <thead>
+                        <tr>
+                            <th>WAKTU</th>
+                            <th>SUHU (°C)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="weather-data">
+                        <!-- Data akan diisi oleh TypeScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="info">
+            <p>DATA FROM: OPEN-METEO.COM</p>
+            <p>LOCATION: JAKARTA (-6.2, 106.8)</p>
+        </section>
+    </main>
+
+    <script type="module" src="dist/main.js"></script>
+</body>
+</html>

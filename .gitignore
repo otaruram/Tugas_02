@@ -1,0 +1,58 @@
+# ===============================================
+# NODE.JS & DEPENDENCIES
+# ===============================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# ===============================================
+# COMPILED OUTPUT
+# ===============================================
+dist/
+build/
+*.tsbuildinfo
+
+# ===============================================
+# DEVELOPMENT FILES
+# ===============================================
+.env
+.env.local
+.env.*
+.vscode/
+.idea/
+
+# ===============================================
+# DOCUMENTATION & PRESENTATION FILES
+# ===============================================
+# HTML Applications (keep only core files)
+architecture-visualization.html
+weather-app-complete.html
+
+# Documentation Files (keep only README)
+ARCHITECTURE_DOCUMENTATION.md
+PRESENTATION_GUIDE.md
+PRESENTATION_SCRIPT.md
+VIDEO_SUMMARY.md
+DEPLOYMENT_GUIDE.md
+TECHNICAL_DOCS.md
+
+# ===============================================
+# SYSTEM FILES
+# ===============================================
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.bak
+
+# ===============================================
+# KEEP ESSENTIAL FILES
+# ===============================================
+!README.md
+!src/
+!index.html
+!styles.css
+!package.json
+!tsconfig.json
