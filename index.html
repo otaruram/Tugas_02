@@ -42,5 +42,85 @@
     </main>
 
     <script type="module" src="dist/main.js"></script>
+    <script>
+        // Fallback jika main.js gagal load
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const tableBody = document.getElementById('weather-data');
+                const status = document.getElementById('status');
+                
+                // Jika tabel masih kosong setelah 3 detik, gunakan fallback
+                if (!tableBody || tableBody.children.length === 0) {
+                    console.log('Fallback: Loading embedded weather app...');
+                    loadFallbackWeatherApp();
+                }
+            }, 3000);
+        });
+
+        function loadFallbackWeatherApp() {
+            const tableBody = document.getElementById('weather-data');
+            const status = document.getElementById('status');
+            const refreshBtn = document.getElementById('refresh-btn');
+            
+            if (!tableBody || !status || !refreshBtn) return;
+            
+            status.textContent = 'MEMUAT DATA DEMO...';
+            refreshBtn.textContent = 'LOADING...';
+            
+            // Generate mock data
+            const now = new Date();
+            const mockData = [];
+            
+            for (let i = 0; i < 24; i++) {
+                const time = new Date(now.getTime() + (i * 60 * 60 * 1000));
+                const baseTemp = 27 + Math.sin(i * Math.PI / 12) * 3;
+                const randomVariation = (Math.random() - 0.5) * 2;
+                const temperature = Math.round((baseTemp + randomVariation) * 10) / 10;
+                
+                mockData.push({
+                    time: time.toLocaleString('id-ID', {
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }).replace(',', ' //'),
+                    temperature: temperature
+                });
+            }
+            
+            // Render data
+            tableBody.innerHTML = '';
+            mockData.forEach(item => {
+                const row = document.createElement('tr');
+                row.className = 'data-row';
+                
+                const timeCell = document.createElement('td');
+                timeCell.textContent = item.time;
+                timeCell.className = 'time-cell';
+                
+                const tempCell = document.createElement('td');
+                tempCell.textContent = item.temperature.toFixed(1) + '°';
+                tempCell.className = 'temp-cell';
+                
+                if (item.temperature > 30) {
+                    tempCell.classList.add('hot');
+                } else if (item.temperature < 20) {
+                    tempCell.classList.add('cool');
+                }
+                
+                row.appendChild(timeCell);
+                row.appendChild(tempCell);
+                tableBody.appendChild(row);
+            });
+            
+            status.textContent = 'DATA DEMO JAKARTA (FALLBACK)';
+            refreshBtn.textContent = 'REFRESH DATA';
+            
+            // Add refresh functionality
+            refreshBtn.onclick = function() {
+                loadFallbackWeatherApp();
+            };
+        }
+    </script>
 </body>
 </html>
