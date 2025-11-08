@@ -20,4 +20,16 @@ cssFiles.forEach(file => {
   console.log(`Copied ${file} to dist/`);
 });
 
+// Copy JS files (if any in root)
+const jsFiles = fs.readdirSync('.').filter(file => file.endsWith('.js') && file !== 'build.js');
+jsFiles.forEach(file => {
+  fs.copyFileSync(file, path.join('dist', file));
+  console.log(`Copied ${file} to dist/`);
+});
+
 console.log('Build completed successfully!');
+console.log('Contents of dist:');
+fs.readdirSync('dist').forEach(file => {
+  const stats = fs.statSync(path.join('dist', file));
+  console.log(`  ${file} (${stats.size} bytes)`);
+});
