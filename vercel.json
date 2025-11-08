@@ -10,18 +10,10 @@
       }
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/architecture-visualization.html",
-      "dest": "/architecture-visualization.html"
-    },
-    {
-      "src": "/weather-app-complete.html", 
-      "dest": "/weather-app-complete.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/((?!architecture-visualization|weather-app-complete).*)",
+      "destination": "/index.html"
     }
   ],
   "headers": [
