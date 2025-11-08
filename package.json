@@ -4,11 +4,11 @@
   "description": "Brutalist weather app with Open-Meteo API",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && node build.js",
     "dev": "tsc --watch",
     "serve": "npx http-server . -p 8080 -c-1 -o",
     "serve:3000": "npx http-server . -p 3000 -o",
-    "vercel-build": "npm run build && copy *.html dist\\ && copy *.css dist\\ && copy vercel.json dist\\",
+    "vercel-build": "npm run build",
     "preview": "npx http-server dist -p 3000 -o"
   },
   "devDependencies": {
