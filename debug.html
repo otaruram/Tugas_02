@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CUACA JAKARTA // BRUTAL WEATHER</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1 class="title">CUACA JAKARTA</h1>
+        <p class="subtitle">WEATHER DATA // BRUTAL INTERFACE</p>
+    </header>
+
+    <main class="main">
+        <section class="controls">
+            <button id="refresh-btn" class="btn-brutal">REFRESH DATA</button>
+            <div id="status" class="status">LOADING...</div>
+        </section>
+
+        <section class="data-section">
+            <h2 class="section-title">TEMPERATURE DATA</h2>
+            <div class="table-container">
+                <table id="weather-table" class="weather-table">
+                    <thead>
+                        <tr>
+                            <th>WAKTU</th>
+                            <th>SUHU (°C)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="weather-data">
+                        <!-- Data akan diisi oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="info">
+            <p>DATA FROM: OPEN-METEO.COM</p>
+            <p>LOCATION: JAKARTA (-6.2, 106.8)</p>
+        </section>
+    </main>
+
+    <script>
+        console.log('Script loaded!');
+        
+        class WeatherApp {
+            constructor() {
+                console.log('WeatherApp initialized');
+                this.apiUrl = 'https://api.open-meteo.com/v1/forecast?latitude=-6.2&longitude=106.8&hourly=temperature_2m';
+                this.tableBody = document.getElementById('weather-data');
+                this.statusElement = document.getElementById('status');
+                this.refreshButton = document.getElementById('refresh-btn');
+                
+                console.log('Elements found:', {
+                    tableBody: !!this.tableBody,
+                    statusElement: !!this.statusElement,
+                    refreshButton: !!this.refreshButton
+                });
+                
+                this.init();
+            }
+
+            init() {
+                this.refreshButton.addEventListener('click', () => this.fetchWeatherData());
+                this.fetchWeatherData(); // Load data saat pertama kali
+            }
+
+            async fetchWeatherData() {
+                try {
+                    console.log('Fetching weather data...');
+                    this.updateStatus('MENGAMBIL DATA...');
+                    this.refreshButton.textContent = 'LOADING...';
+                    
+                    const response = await fetch(this.apiUrl);
+                    console.log('Response:', response.status, response.ok);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    console.log('Data received:', data);
+                    this.displayWeatherData(data);
+                    this.updateStatus('DATA BERHASIL DIMUAT');
+                    
+                } catch (error) {
+                    console.error('Error fetching weather data:', error);
+                    this.updateStatus('ERROR: GAGAL MENGAMBIL DATA');
+                    this.displayError();
+                } finally {
+                    this.refreshButton.textContent = 'REFRESH DATA';
+                }
+            }
+
+            displayWeatherData(data) {
+                console.log('Displaying weather data...');
+                const weatherData = data.hourly.time.map((time, index) => ({
+                    time: this.formatDateTime(time),
+                    temperature: data.hourly.temperature_2m[index]
+                }));
+
+                // Ambil 24 jam ke depan saja
+                const next24Hours = weatherData.slice(0, 24);
+                console.log('Next 24 hours:', next24Hours.length, 'items');
+                
+                this.tableBody.innerHTML = '';
+                
+                next24Hours.forEach((item, index) => {
+                    console.log(`Adding row ${index}:`, item);
+                    const row = this.createTableRow(item);
+                    this.tableBody.appendChild(row);
+                });
+                
+                console.log('Table updated with', next24Hours.length, 'rows');
+            }
+
+            createTableRow(data) {
+                const row = document.createElement('tr');
+                row.className = 'data-row';
+                
+                const timeCell = document.createElement('td');
+                timeCell.textContent = data.time;
+                timeCell.className = 'time-cell';
+                
+                const tempCell = document.createElement('td');
+                tempCell.textContent = `${data.temperature.toFixed(1)}°`;
+                tempCell.className = 'temp-cell';
+                
+                // Tambahkan class untuk styling berdasarkan suhu
+                if (data.temperature > 30) {
+                    tempCell.classList.add('hot');
+                } else if (data.temperature < 20) {
+                    tempCell.classList.add('cool');
+                }
+                
+                row.appendChild(timeCell);
+                row.appendChild(tempCell);
+                
+                return row;
+            }
+
+            formatDateTime(isoString) {
+                const date = new Date(isoString);
+                const options = {
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                };
+                
+                return date.toLocaleString('id-ID', options).replace(',', ' //');
+            }
+
+            updateStatus(message) {
+                this.statusElement.textContent = message;
+            }
+
+            displayError() {
+                this.tableBody.innerHTML = `
+                    <tr class="error-row">
+                        <td colspan="2">
+                            GAGAL MEMUAT DATA<br>
+                            PERIKSA KONEKSI INTERNET
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Inisialisasi aplikasi setelah DOM loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded, initializing WeatherApp...');
+            new WeatherApp();
+        });
+    </script>
+</body>
+</html>
