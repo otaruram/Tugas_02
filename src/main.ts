@@ -13,7 +13,12 @@ interface WeatherData {
 }
 
 class WeatherApp {
-    private readonly apiUrl = 'https://api.open-meteo.com/v1/forecast?latitude=-6.2&longitude=106.8&hourly=temperature_2m';
+    // Gunakan CORS proxy untuk production, direct API untuk development
+    private readonly apiUrl = window.location.hostname === 'localhost' 
+        ? 'https://api.open-meteo.com/v1/forecast?latitude=-6.2&longitude=106.8&hourly=temperature_2m'
+        : 'https://cors-anywhere.herokuapp.com/https://api.open-meteo.com/v1/forecast?latitude=-6.2&longitude=106.8&hourly=temperature_2m';
+    
+    private readonly fallbackApiUrl = 'https://api.open-meteo.com/v1/forecast?latitude=-6.2&longitude=106.8&hourly=temperature_2m';
     private readonly tableBody: HTMLElement;
     private readonly statusElement: HTMLElement;
     private readonly refreshButton: HTMLElement;
@@ -36,10 +41,24 @@ class WeatherApp {
             this.updateStatus('MENGAMBIL DATA...');
             this.refreshButton.textContent = 'LOADING...';
             
-            const response = await fetch(this.apiUrl);
+            // Coba dengan URL utama dulu
+            let response = await this.tryFetch(this.apiUrl);
             
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            // Jika gagal, coba dengan fallback
+            if (!response) {
+                console.log('Primary API failed, trying fallback...');
+                this.updateStatus('MENCOBA ALTERNATIF...');
+                response = await this.tryFetch(this.fallbackApiUrl);
+            }
+            
+            // Jika semua API gagal, gunakan mock data
+            if (!response) {
+                console.log('All APIs failed, using mock data...');
+                this.updateStatus('MENGGUNAKAN DATA DEMO...');
+                const mockData = this.generateMockData();
+                this.displayWeatherData(mockData);
+                this.updateStatus('DATA DEMO DIMUAT (API TIDAK TERSEDIA)');
+                return;
             }
             
             const data: WeatherResponse = await response.json();
@@ -52,6 +71,29 @@ class WeatherApp {
             this.displayError();
         } finally {
             this.refreshButton.textContent = 'REFRESH DATA';
+        }
+    }
+
+    private async tryFetch(url: string): Promise<Response | null> {
+        try {
+            console.log('Trying to fetch from:', url);
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                },
+                mode: 'cors' // Explicitly set CORS mode
+            });
+            
+            if (!response.ok) {
+                console.log(`HTTP ${response.status}: ${response.statusText}`);
+                return null;
+            }
+            
+            return response;
+        } catch (error) {
+            console.error('Fetch error:', error);
+            return null;
         }
     }
 
@@ -107,6 +149,29 @@ class WeatherApp {
         };
         
         return date.toLocaleString('id-ID', options).replace(',', ' //');
+    }
+
+    private generateMockData(): WeatherResponse {
+        const now = new Date();
+        const times: string[] = [];
+        const temperatures: number[] = [];
+        
+        // Generate 24 hours of mock data
+        for (let i = 0; i < 24; i++) {
+            const time = new Date(now.getTime() + (i * 60 * 60 * 1000));
+            times.push(time.toISOString());
+            // Jakarta temperature range: 24-32°C with realistic variation
+            const baseTemp = 27 + Math.sin(i * Math.PI / 12) * 3; // Day/night cycle
+            const randomVariation = (Math.random() - 0.5) * 2;
+            temperatures.push(Math.round((baseTemp + randomVariation) * 10) / 10);
+        }
+        
+        return {
+            hourly: {
+                time: times,
+                temperature_2m: temperatures
+            }
+        };
     }
 
     private updateStatus(message: string): void {
