@@ -9,7 +9,7 @@
 <body>
     <header class="header">
         <h1 class="title">CUACA JAKARTA</h1>
-        <p class="subtitle">WEATHER DATA // BRUTAL INTERFACE</p>
+        
     </header>
 
     <main class="main">
@@ -35,10 +35,13 @@
             </div>
         </section>
 
-        <section class="info">
-            <p>DATA FROM: OPEN-METEO.COM</p>
-            <p>LOCATION: JAKARTA (-6.2, 106.8)</p>
-        </section>
+        <footer class="footer" style="margin-top:2rem; padding:1.5rem 0; background:#000; color:#fff; text-align:center; font-family:monospace; font-size:1rem; letter-spacing:0.05em;">
+            <span>by <b>otaruram</b> &mdash; </span>
+            <a href="https://github.com/otaruram/Tugas_02" target="_blank" style="color:#fff; text-decoration:underline;">GitHub</a>
+            &nbsp;|&nbsp;
+            <a href="https://www.linkedin.com/in/otaruram/" target="_blank" style="color:#fff; text-decoration:underline;">LinkedIn</a>
+        </footer>
+        
     </main>
 
     <script type="module" src="dist/main.js"></script>
@@ -113,7 +116,7 @@
                 tableBody.appendChild(row);
             });
             
-            status.textContent = 'DATA DEMO JAKARTA (FALLBACK)';
+            status.textContent = '';
             refreshBtn.textContent = 'REFRESH DATA';
             
             // Add refresh functionality

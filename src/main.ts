@@ -54,16 +54,16 @@ class WeatherApp {
             // Jika semua API gagal, gunakan mock data
             if (!response) {
                 console.log('All APIs failed, using mock data...');
-                this.updateStatus('MENGGUNAKAN DATA DEMO...');
+                this.updateStatus('');
                 const mockData = this.generateMockData();
                 this.displayWeatherData(mockData);
-                this.updateStatus('DATA DEMO DIMUAT (API TIDAK TERSEDIA)');
+                this.updateStatus('');
                 return;
             }
             
             const data: WeatherResponse = await response.json();
             this.displayWeatherData(data);
-            this.updateStatus('DATA BERHASIL DIMUAT');
+            this.updateStatus('');
             
         } catch (error) {
             console.error('Error fetching weather data:', error);
